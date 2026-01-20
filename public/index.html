@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulasi Antrean Klinik - Tugas Besar Pemodelan dan Simulasi</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 10% 20%, rgba(255,110,64,0.1) 0%, rgba(30,61,89,0.05) 100%);
+            z-index: -1;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(120deg, #1e3d59 0%, #2a547e 100%);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo-icon {
+            font-size: 2.2rem;
+            color: #ff6e40;
+        }
+        
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        .logo-text span {
+            color: #ff6e40;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+        
+        nav a:hover, nav a.active {
+            background: rgba(255, 110, 64, 0.3);
+            color: #ff6e40;
+        }
+        
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            margin: 20px 0;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            color: #1e3d59;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .hero h1 span {
+            color: #ff6e40;
+        }
+        
+        .hero p {
+            font-size: 1.5rem;
+            color: #555;
+            max-width: 800px;
+            margin: 0 auto 30px;
+            line-height: 1.7;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #1e3d59 0%, #2a547e 100%);
+            color: white;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.4s ease;
+            box-shadow: 0 4px 15px rgba(30, 61, 89, 0.3);
+            border: 2px solid #1e3d59;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(30, 61, 89, 0.4);
+            background: linear-gradient(135deg, #ff6e40 0%, #ff8c69 100%);
+            border-color: #ff6e40;
+        }
+        
+        .cta-button i {
+            margin-right: 8px;
+        }
+        
+        /* Features Section */
+        .features {
+            padding: 80px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: #1e3d59;
+            margin-bottom: 15px;
+        }
+        
+        .section-title p {
+            color: #666;
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #1e3d59, #ff6e40);
+        }
+        
+        .feature-icon {
+            font-size: 3.5rem;
+            color: #1e3d59;
+            margin-bottom: 20px;
+        }
+        
+        .feature-card:hover .feature-icon {
+            color: #ff6e40;
+            transform: scale(1.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: #1e3d59;
+        }
+        
+        .feature-card p {
+            color: #666;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        /* Demo Section */
+        .demo-section {
+            background: linear-gradient(135deg, #1e3d59 0%, #2a547e 100%);
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+            border-radius: 20px;
+            margin: 40px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .demo-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,110,64,0.1) 0%, transparent 70%);
+            z-index: 0;
+        }
+        
+        .demo-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .demo-content h2 {
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+        }
+        
+        .demo-content p {
+            font-size: 1.4rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        
+        .demo-button {
+            background: linear-gradient(135deg, #ff6e40 0%, #ff8c69 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: 0 4px 15px rgba(255, 110, 64, 0.4);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .demo-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(255, 110, 64, 0.6);
+        }
+        
+        .demo-button i {
+            font-size: 1.2rem;
+        }
+        
+        /* Footer */
+        footer {
+            background: #1e3d59;
+            color: white;
+            padding: 40px 0 20px;
+            margin-top: 60px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+        
+        .footer-section h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #ff6e40;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+        
+        .footer-links a {
+            color: #ddd;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .footer-links a:hover {
+            color: #ff6e40;
+            transform: translateX(5px);
+        }
+        
+        .footer-links i {
+            color: #ff6e40;
+            font-size: 0.9rem;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            margin-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: #aaa;
+            font-size: 1rem;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate {
+            animation: fadeIn 0.8s ease forwards;
+        }
+        
+        .feature-card {
+            animation: fadeIn 0.6s ease forwards;
+            animation-delay: calc(var(--i) * 0.2s);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.2rem;
+            }
+            
+            .cta-button {
+                padding: 12px 30px;
+                font-size: 1rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero {
+                padding: 40px 15px;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .demo-content h2 {
+                font-size: 2.2rem;
+            }
+            
+            .demo-content p {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fas fa-heartbeat logo-icon"></i>
+                <div class="logo-text">Simulasi <span>Antrean Klinik</span></div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#home" class="active">Beranda</a></li>
+                    <li><a href="#features">Fitur</a></li>
+                    <li><a href="#demo">Demo</a></li>
+                    <li><a href="#contact">Kontak</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container animate">
+            <h1>Optimasi Pelayanan Kesehatan dengan <span>Simulasi Antrean</span></h1>
+            <p>Aplikasi simulasi berbasis Discrete Event Simulation (DES) untuk menganalisis dan mengoptimalkan sistem antrean di fasilitas kesehatan menggunakan framework SimPy.</p>
+            <a href="https://your-streamlit-app-url.streamlit.app" target="_blank" class="cta-button">
+                <i class="fas fa-play-circle"></i>Lihat Demo Aplikasi
+            </a>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features container" id="features">
+        <div class="section-title">
+            <h2>✨ Fitur Unggulan</h2>
+            <p>Solusi komprehensif untuk analisis dan optimasi sistem antrean klinik</p>
+        </div>
+        
+        <div class="features-grid">
+            <div class="feature-card" style="--i: 1;">
+                <i class="fas fa-chart-line feature-icon"></i>
+                <h3>Simulasi Realistis</h3>
+                <p>Model simulasi berbasis kejadian diskrit dengan parameter yang dapat dikustomisasi sesuai kebutuhan klinik.</p>
+            </div>
+            
+            <div class="feature-card" style="--i: 2;">
+                <i class="fas fa-sliders-h feature-icon"></i>
+                <h3>Parameter Interaktif</h3>
+                <p>Atur kapasitas dokter, waktu kedatangan, dan durasi layanan secara real-time untuk melihat dampaknya.</p>
+            </div>
+            
+            <div class="feature-card" style="--i: 3;">
+                <i class="fas fa-lightbulb feature-icon"></i>
+                <h3>Rekomendasi AI</h3>
+                <p>Sistem memberikan rekomendasi optimasi berdasarkan hasil simulasi untuk meningkatkan efisiensi layanan.</p>
+            </div>
+            
+            <div class="feature-card" style="--i: 4;">
+                <i class="fas fa-chart-bar feature-icon"></i>
+                <h3>Visualisasi Data</h3>
+                <p>Grafik dan visualisasi interaktif untuk memahami pola antrean dan kinerja sistem secara intuitif.</p>
+            </div>
+            
+            <div class="feature-card" style="--i: 5;">
+                <i class="fas fa-cloud-upload-alt feature-icon"></i>
+                <h3>Data Riil</h3>
+                <p>Integrasi dengan data riil dari database klinik untuk simulasi yang akurat dan relevan.</p>
+            </div>
+            
+            <div class="feature-card" style="--i: 6;">
+                <i class="fas fa-mobile-alt feature-icon"></i>
+                <h3>Mobile Friendly</h3>
+                <p>Aplikasi dapat diakses dari berbagai perangkat dengan tampilan yang responsif dan user-friendly.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo Section -->
+    <section class="demo-section" id="demo">
+        <div class="container demo-content">
+            <h2>📱 Lihat Demo Aplikasi</h2>
+            <p>Interaktif, intuitif, dan powerful - simulasi antrean klinik dalam genggaman Anda</p>
+            <button class="demo-button" onclick="window.open('https://your-streamlit-app-url.streamlit.app', '_blank')">
+                <i class="fas fa-rocket"></i> Jalankan Simulasi Sekarang
+            </button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Tentang Aplikasi</h3>
+                    <p>Aplikasi simulasi antrean klinik ini dikembangkan sebagai bagian dari Tugas Besar mata kuliah Pemodelan dan Simulasi. Menggunakan framework SimPy dan Streamlit untuk memberikan solusi optimasi layanan kesehatan.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Link Cepat</h3>
+                    <ul class="footer-links">
+                        <li><a href="#home"><i class="fas fa-chevron-right"></i> Beranda</a></li>
+                        <li><a href="#features"><i class="fas fa-chevron-right"></i> Fitur</a></li>
+                        <li><a href="#demo"><i class="fas fa-chevron-right"></i> Demo</a></li>
+                        <li><a href="#contact"><i class="fas fa-chevron-right"></i> Kontak</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Kontak</h3>
+                    <ul class="footer-links">
+                        <li><a href="mailto:reyhan@example.com"><i class="fas fa-envelope"></i> reyhan@example.com</a></li>
+                        <li><a href="https://github.com/reyhan" target="_blank"><i class="fab fa-github"></i> GitHub Profile</a></li>
+                        <li><a href="https://linkedin.com/in/reyhan" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn Profile</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2026 Reyhan Aditya Kusumah - Tugas Besar Pemodelan dan Simulasi. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Simple animation on scroll
+        document.addEventListener('DOMContentLoaded', function() {
+            const featureCards = document.querySelectorAll('.feature-card');
+            featureCards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+            });
+            
+            // Smooth scrolling for navigation
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        window.scrollTo({
+                            top: target.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
+            // Header scroll effect
+            window.addEventListener('scroll', function() {
+                const header = document.querySelector('header');
+                if (window.scrollY > 50) {
+                    header.style.boxShadow = '0 4px 20px rgba(0,0,0,0.15)';
+                    header.style.background = 'rgba(30, 61, 89, 0.95)';
+                } else {
+                    header.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
+                    header.style.background = 'linear-gradient(120deg, #1e3d59 0%, #2a547e 100%)';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

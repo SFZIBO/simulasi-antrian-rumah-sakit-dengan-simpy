@@ -1,0 +1,50 @@
+/* Custom CSS for Streamlit app */
+.streamlit-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.streamlit-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.streamlit-metric {
+    background: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.streamlit-metric:hover {
+    transform: translateY(-5px);
+}
+
+.streamlit-chart {
+    background: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    margin: 1rem 0;
+}
+
+.streamlit-recommendation {
+    border-left: 4px solid #ff6e40;
+    padding: 1rem;
+    background-color: #fff8f5;
+    margin: 1rem 0;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .streamlit-metric {
+        margin-bottom: 1rem;
+    }
+    
+    .streamlit-chart {
+        padding: 1rem;
+    }
+}
